@@ -1,5 +1,6 @@
 import './style.css'
 import { setUpUserInterface } from './dommanager.js'
+import PubSub from 'pubsub-js'
 
 class TaskList {
     tasks = [];
@@ -16,7 +17,7 @@ class TaskList {
         return TaskList.allLists.find(list => list.title === title);
     }
 
-    static getActiveList(){
+    static getActiveList() {
         return this.activeList;
     }
 
@@ -48,5 +49,11 @@ setUpUserInterface();
 let defaultList = new TaskList('My List');
 defaultList.setAsActive();
 
-let testTask = new Task('test', '6');
-console.log(defaultList.tasks[0].dueDate);
+//subscribing to form submits in DOM
+const FORM_SUBMITTED = 'form submitted';
+
+PubSub.subscribe(FORM_SUBMITTED, (msg, data) => {
+    new Task(data.title, data.dueDate, data.priority, data.note);
+
+    console.log(defaultList.tasks[0].title);
+})
