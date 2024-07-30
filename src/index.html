@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="menu">
+        <button class="all-tasks">All tasks</button>
+        <p>Your lists</p>
+    </div>
+    <main>
+        <div class="task-list"></div>
+        <button class="add-task">+</button>
+    </main>
+
+    <dialog class="new-task-dialog">
+        <form action="" method="post">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title">
+            <label for="due-date"></label>
+            <input type="date" name="due-date" id="due-date">
+            <label for="priority">
+                <select name="priority" id="priotiry">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">high</option>
+                </select>
+            </label>
+            <label for="note"></label>
+            <textarea name="note" id="note" rows="4"></textarea>
+            <input type="submit" value="ADD">
+        </form>
+    </dialog>
+</body>
+
+</html>

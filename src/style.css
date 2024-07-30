@@ -1,0 +1,26 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    margin: 0;
+    display: grid;
+    grid-template-columns: min(300px, 30%) 1fr;
+    grid-template-rows: 100vh;
+}
+
+.menu{
+    background-color: #EF6F6C;
+}
+
+.menu button{
+    background: transparent;
+    border: 0;
+    font-size: inherit;
+}
+
+.add-task{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}

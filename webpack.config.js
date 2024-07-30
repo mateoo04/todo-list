@@ -9,14 +9,22 @@ module.exports = {
             template: './src/index.html',
         })
     ],
+    module: {
+        rules: [
+            {
+                test: /\.css$/i,
+                use:['style-loader','css-loader'],
+            }
+        ]
+    },
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'dist'),
     },
-    mode:'development',
-    devtool:'inline-source-map',
-    devServer:{
-        static:'./dist',
-        watchFiles:['src/*.*']
+    mode: 'development',
+    devtool: 'inline-source-map',
+    devServer: {
+        static: './dist',
+        watchFiles: ['src/*.*']
     }
 }
