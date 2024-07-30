@@ -19,12 +19,12 @@
 
     <dialog class="new-task-dialog">
         <form action="" method="post">
-            <label for="title">Title</label>
-            <input type="text" name="title" id="title">
-            <label for="due-date">Due Date</label>
-            <input type="date" name="due-date" id="due-date">
-            <label for="priority">Priority
-                <select name="priority" id="priority">
+            <label for="title-input">Title</label>
+            <input type="text" name="title" id="title-input">
+            <label for="due-date-input">Due Date</label>
+            <input type="date" name="due-date" id="due-date-input">
+            <label for="priority-input">Priority
+                <select name="priority" id="priority-input">
                     <option value="none" selected>None</option>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -32,8 +32,9 @@
                 </select>
             </label>
             <label for="note">Note</label>
-            <textarea name="note" id="note" rows="4"></textarea>
+            <textarea name="note" id="note-input" rows="4"></textarea>
             <input type="submit" value="ADD">
+            <button type="button" class="close-dialog-button">CLOSE</button>
         </form>
     </dialog>
 </body>

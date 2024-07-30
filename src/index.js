@@ -1,5 +1,5 @@
 import './style.css'
-import { setUpUserInterface } from './dommanager.js'
+import { setUpUserInterface, updateTaskList } from './dommanager.js'
 import PubSub from 'pubsub-js'
 
 class TaskList {
@@ -54,6 +54,7 @@ const FORM_SUBMITTED = 'form submitted';
 
 PubSub.subscribe(FORM_SUBMITTED, (msg, data) => {
     new Task(data.title, data.dueDate, data.priority, data.note);
+    updateTaskList(TaskList.getActiveList());
 
     console.log(defaultList.tasks[0].title);
 })
