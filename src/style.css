@@ -175,6 +175,7 @@ input[type='checkbox'] {
     width: 26px;
     border: 0;
     background-color: var(--light-accent-color);
+    opacity: 0.5;
 }
 
 .delete-task-button {
@@ -183,6 +184,7 @@ input[type='checkbox'] {
     background-repeat: no-repeat;
     border: 0;
     background-color: var(--light-accent-color);
+    opacity: 0.5;
 }
 
 .message-dialog button {

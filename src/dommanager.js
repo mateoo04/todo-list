@@ -1,7 +1,7 @@
-import PubSub from 'pubsub-js'
-import detailsIcon from './info-icon.svg'
-import removeIcon from './trash-icon.svg'
-import listMarker from './chevron-icon.svg'
+import PubSub from 'pubsub-js';
+import detailsIcon from './info-icon.svg';
+import removeIcon from './trash-icon.svg';
+import listMarker from './chevron-icon.svg';
 
 const taskList = document.querySelector('.task-list');
 const messageDialog = document.querySelector('.message-dialog');
@@ -9,14 +9,15 @@ const messageDialog = document.querySelector('.message-dialog');
 export function setUpUserInterface() {
     const NEW_TASK = 'new task created', NEW_LIST = 'new list created', SHOW_ALL_TASKS = 'show all tasks';
 
-    //Add tast ('+') button click listener
     const addTaskButton = document.querySelector('.add-task');
     const newTaskDialog = document.querySelector('.new-task-dialog');
 
+    //Add task ('+') button click listener
     addTaskButton.addEventListener('click', () => {
         newTaskDialog.showModal();
     });
 
+    //set up dialog form for adding new tasks
     const newTaskForm = document.querySelector('.new-task-dialog form');
     newTaskForm.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -28,9 +29,7 @@ export function setUpUserInterface() {
 
         newTaskForm.reset();
         newTaskDialog.close();
-        // console.log(title, dueDate, priority, note);
 
-        // PubSub.publish(FORM_SUBMITTED, new Task(title, dueDate, priority, note));
         PubSub.publish(NEW_TASK, {
             title: title,
             dueDate: dueDate,
@@ -40,7 +39,7 @@ export function setUpUserInterface() {
 
     });
 
-    //add new list: button click
+    //set up dialog for adding new lists
     const newListDialog = document.querySelector('.new-list-dialog');
 
     document.querySelector('.add-list-button').addEventListener('click', () => {
@@ -57,23 +56,23 @@ export function setUpUserInterface() {
         newListForm.reset();
     });
 
-    //closeDialogButton click listener
+    //click listener for dialog closing button
     const closeDialogButtons = document.querySelectorAll('.close-dialog-button');
     closeDialogButtons.forEach((element) => {
         element.addEventListener('click', () => {
-            if (newListDialog.open)
-                newTaskDialog.close();
+            if (newListDialog.open) {
+                newListDialog.close();
+            }
 
             if (newTaskDialog.open)
                 newTaskDialog.close();
 
             if (messageDialog.open)
                 messageDialog.close();
-
         });
     });
 
-    //show all tasks menu button click listener
+    //click listener for button which loads all existing tasks across all lists
     document.querySelector('.all-tasks').addEventListener('click', () => {
         PubSub.publish(SHOW_ALL_TASKS);
     });
@@ -82,9 +81,13 @@ export function setUpUserInterface() {
 export function updateTaskList(list) {
     taskList.innerHTML = '';
 
-    for (let i = 0; i < list.tasks.length; i++) {
-        taskList.append(generateTaskItemElement(list.tasks[i]));
-    }
+    // for (let i = 0; i < list.tasks.length; i++) {
+    //     taskList.append(generateTaskItemElement(list.tasks[i]));
+    // }
+
+    list.tasks.forEach((value, key)=>{
+        taskList.append(generateTaskItemElement(value));
+    })
 }
 
 function generateTaskItemElement(task) {
@@ -111,6 +114,9 @@ function generateTaskItemElement(task) {
     const detailsButton = document.createElement('button');
     detailsButton.classList.add('details-button');
     detailsButton.style.backgroundImage = `url(${detailsIcon})`;
+    detailsButton.addEventListener('click', () => {
+
+    });
 
     const deleteTaskButton = document.createElement('button');
     deleteTaskButton.classList.add('delete-task-button');
@@ -154,14 +160,14 @@ export function showAllTasks(lists) {
     updateActiveListHeader('All tasks');
 
     for (let i = 0; i < lists.length; i++) {
-        for (let j = 0; j < lists[i].tasks.length; j++) {
-            console.log(lists[i].tasks[j])
-            taskList.append(generateTaskItemElement(lists[i].tasks[j]));
-        }
+
+        lists[i].tasks.forEach((value, key)=>{
+            taskList.append(generateTaskItemElement(value));
+        })
     }
 }
 
-export function updateActiveListHeader(title){
+export function updateActiveListHeader(title) {
     const activeListHeader = document.querySelector('.active-list-header');
     activeListHeader.textContent = title;
 }

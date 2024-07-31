@@ -35,11 +35,32 @@
                     <option value="medium">Medium</option>
                     <option value="high">High</option>
                 </select>
+            </label>    
+            <label for="note">Note</label>
+            <textarea name="note" id="note-input" rows="4"></textarea>
+            <input type="submit" value="ADD NEW TASK">
+            <button type="button" class="close-dialog-button">CANCEL</button>
+        </form>
+    </dialog>
+
+    <dialog class="edit-task-dialog">
+        <form action="" method="post">
+            <label for="title-input">Title</label>
+            <input type="text" name="title" id="title-input">
+            <label for="due-date-input">Due Date</label>
+            <input type="date" name="due-date" id="due-date-input">
+            <label for="priority-input">Priority
+                <select name="priority" id="priority-input">
+                    <option value="none" selected>None</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
             </label>
             <label for="note">Note</label>
             <textarea name="note" id="note-input" rows="4"></textarea>
-            <input type="submit" value="ADD">
-            <button type="button" class="close-dialog-button">CLOSE</button>
+            <input type="submit" value="SAVE CHANGES" class="submit-task-button">
+            <button type="button" class="cancel-dialog-button">CANCEL</button>
         </form>
     </dialog>
 
