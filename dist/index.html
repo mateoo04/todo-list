@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do</title>
-    <link rel="stylesheet" href="./style.css">
 <script defer src="main.js"></script></head>
+
 <body>
     <div class="menu">
         <button class="all-tasks">All tasks</button>
         <p>Your lists</p>
     </div>
-    <main></main>
+    <main>
+        <div class="task-list"></div>
+        <button class="add-task">+</button>
+    </main>
+
+    <dialog class="new-task-dialog">
+        <form action="" method="post">
+            <label for="title-input">Title</label>
+            <input type="text" name="title" id="title-input">
+            <label for="due-date-input">Due Date</label>
+            <input type="date" name="due-date" id="due-date-input">
+            <label for="priority-input">Priority
+                <select name="priority" id="priority-input">
+                    <option value="none" selected>None</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </label>
+            <label for="note">Note</label>
+            <textarea name="note" id="note-input" rows="4"></textarea>
+            <input type="submit" value="ADD">
+            <button type="button" class="close-dialog-button">CLOSE</button>
+        </form>
+    </dialog>
 </body>
+
 </html>

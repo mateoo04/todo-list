@@ -1,7 +1,8 @@
 const { watchFile } = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { type } = require('os');
 const path = require('path');
-
+ 
 module.exports = {
     entry: './src/index.js',
     plugins: [
@@ -13,7 +14,11 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/i,
-                use:['style-loader','css-loader'],
+                use: ['style-loader', 'css-loader'],
+            },
+            {
+                test:/\.(png|svg)$/i,
+                type:'asset/resource',
             }
         ]
     },

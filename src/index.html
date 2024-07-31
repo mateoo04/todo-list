@@ -9,10 +9,15 @@
 
 <body>
     <div class="menu">
+        <h1>Tasker</h1>
         <button class="all-tasks">All tasks</button>
-        <p>Your lists</p>
+        <p class="your-lists">Your lists</p>
+        <ul class="lists-list"></ul>
+
+        <button class="add-list-button"><span class="plus-sign">+ </span>New List</button>
     </div>
     <main>
+        <h2 class="active-list-header"></h2>
         <div class="task-list"></div>
         <button class="add-task">+</button>
     </main>
@@ -36,6 +41,21 @@
             <input type="submit" value="ADD">
             <button type="button" class="close-dialog-button">CLOSE</button>
         </form>
+    </dialog>
+
+    <dialog class="new-list-dialog">
+        <form action="" method="post">
+            <label for="list-title">List Title</label>
+            <input type="text" name="list-title" id="list-title" pattern=".{2,}">
+            <input type="submit" name="submit" id="submit" value="CREATE LIST">
+            <button type="button" class="close-dialog-button">CLOSE</button>
+        </form>
+    </dialog>
+
+    <dialog class="message-dialog">
+        <p></p>
+
+        <button type="button" class="close-dialog-button">CLOSE</button>
     </dialog>
 </body>
 

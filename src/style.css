@@ -1,3 +1,8 @@
+:root {
+    --accent-color: #EF6F6C;
+    --light-accent-color: #fcf3f2;
+}
+
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -5,26 +10,67 @@
 body {
     margin: 0;
     display: grid;
-    grid-template-columns: min(300px, 30%) 1fr;
+    grid-template-columns: 240px 1fr;
     grid-template-rows: 100vh;
 }
 
 .menu {
-    background-color: #EF6F6C;
+    background-color: var(--accent-color);
     color: #fff;
+    padding: 0px 20px;
+    font-size: 1.2em;
 }
 
-.menu button {
+.menu .all-tasks,
+.add-list-button {
     background: transparent;
     border: 0;
     font-size: inherit;
+    padding: 0;
+    color: #fff;
+}
+
+.add-list-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 8px;
+}
+
+.menu button:hover,
+.menu li:hover {
+    text-shadow: 1px 0px 1px #fff;
+}
+
+.plus-sign {
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.your-lists {
+    margin-bottom: 0;
+    opacity: 0.8;
+}
+
+.menu ul {
+    padding-inline-start: 30px;
+    list-style-image: url('./chevron-icon.svg');
+    margin-top: 0;
+}
+
+.menu li::marker {
+    font-size: 1.8em;
+}
+
+.task-list {
+    padding: 0px 30px;
 }
 
 .add-task {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #EF6F6C;
+    background-color: var(--accent-color);
     outline: 0;
     border: 0;
     width: 64px;
@@ -35,7 +81,15 @@ body {
     box-shadow: 1px 1px 1px #808080;
 }
 
-button, input {
+h2{
+    padding: 20px 30px;
+    font-size: 2em;
+    color: var(--accent-color);
+}
+
+button,
+input,
+.menu li {
     cursor: pointer;
 }
 
@@ -53,7 +107,9 @@ dialog {
 
 form input,
 textarea,
-input[type='submit'], form select, .close-dialog-button {
+input[type='submit'],
+form select,
+.close-dialog-button {
     border-radius: 12px;
     border: 0;
     padding: 6px 12px;
@@ -66,41 +122,69 @@ form textarea {
     background-color: #f5f5f5;
 }
 
-form label{
+form label {
     text-transform: uppercase;
     font-size: 0.6em;
     color: #827f7f;
 }
 
-label[for='priority']{
+label[for='priority'] {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 input[type='submit'] {
-    background-color: #EF6F6C;
+    background-color: var(--accent-color);
     margin-top: 10px;
     color: #fff;
     font-weight: 700;
 }
 
-.close-dialog-button{
+.close-dialog-button {
     font-weight: 700;
 }
 
 /*Task item*/
-.task-item{
+.task-item {
     display: grid;
-    grid-template-columns: min-content 1fr repeat(3, min-content);
+    grid-template-columns: min-content 1fr repeat(2, min-content);
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    background-color: var(--light-accent-color);
+    border-radius: 20px;
+    padding: 4px 18px;
+    margin-bottom: 8px;
 }
 
-.task-item > *{
-    display: inline;
+input[type='checkbox'] {
+    accent-color: var(--accent-color);
 }
 
-.task-due-date{
+.task-info p {
+    margin: 3px 0;
+    color: #323232;
+}
+
+.task-due-date {
     text-wrap: nowrap;
+}
+
+.details-button {
+    height: 26px;
+    width: 26px;
+    border: 0;
+    background-color: var(--light-accent-color);
+}
+
+.delete-task-button {
+    width: 20px;
+    height: 24px;
+    background-repeat: no-repeat;
+    border: 0;
+    background-color: var(--light-accent-color);
+}
+
+.message-dialog button {
+    width: 100%;
 }
