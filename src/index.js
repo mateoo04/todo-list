@@ -1,10 +1,11 @@
 import './style.css';
-import { setUpUserInterface, updateTaskList, updateListsList, showMessage, showAllTasks, updateActiveListHeader } from './dommanager.js';
+import { setUpUserInterface, updateTaskList, updateListsList, showMessage, showAllTasks, updateActiveListHeader, showEditTaskDialog } from './dommanager.js';
 import PubSub from 'pubsub-js';
 import { format, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
-    ACTIVE_LIST_CHANGE = 'active list changed', SHOW_ALL_TASKS = 'show all tasks', TASK_MODIFICATION = 'task modified';;
+    ACTIVE_LIST_CHANGE = 'active list changed', SHOW_ALL_TASKS = 'show all tasks',
+    TASK_MODIFICATION = 'task modified', EDIT_TASK = 'edit task button clicked';;
 
 class TaskList {
     tasks = new Map();
@@ -28,10 +29,10 @@ class TaskList {
         return this.activeList;
     }
 
-    static getTaskById(taskId){
-        for(const list of TaskList.allLists){
-            for(const item of list.tasks){
-                if(item[1].id === taskId) return item[1];
+    static getTaskById(taskId) {
+        for (const list of TaskList.allLists) {
+            for (const item of list.tasks) {
+                if (item[1].id === taskId) return item[1];
             }
         }
 
@@ -51,11 +52,11 @@ class TaskList {
 }
 
 class Task {
-    constructor(title, dueDate = '', priority = '', note = '') {
+    constructor(title, nonFormattedDueDate = '', priority = '', note = '') {
         this.title = title;
+        this.nonFormattedDueDate = nonFormattedDueDate;
 
-        if (dueDate != '')
-            this.dueDate = getDate(dueDate);
+        nonFormattedDueDate == '' ? this.dueDate = '' : this.dueDate = getDate(nonFormattedDueDate);
 
         this.priority = priority;
         this.note = note;
@@ -118,14 +119,23 @@ PubSub.subscribe(SHOW_ALL_TASKS, () => {
     requestShowAllTasks();
 })
 
-PubSub.subscribe(TASK_MODIFICATION, (msg,data) =>{
+PubSub.subscribe(TASK_MODIFICATION, (msg, data) => {
     const taskForModification = TaskList.getTaskById(data.id);
-    console.log(taskForModification,data);
 
-    for(const [key, value] of Object.entries(data)){
-        console.log(key,value);
+    for (const [key, value] of Object.entries(data)) {
+        if(taskForModification[key] === value) continue;
         taskForModification[key] = value;
+
+        if (key === 'nonFormattedDueDate') {
+            taskForModification.dueDate = getDate(value);
+        }
     }
+});
+
+PubSub.subscribe(EDIT_TASK, (msg, data) => {
+    const task = TaskList.getTaskById(data);
+
+    showEditTaskDialog(task.id, task.title, task.nonFormattedDueDate, task.priority, task.note);
 });
 
 //get better looking date form
@@ -135,8 +145,6 @@ function getDate(string) {
     const day = parseInt(string.substr(8, 2));
 
     const date = new Date(year, month - 1, day);
-
-    console.log(year, month, day);
 
     if (isToday(date)) {
         return 'Today';
@@ -155,10 +163,10 @@ function generateId() {
 }
 
 //preloaded tasks
-new Task('Buy oat milk', '2024-08-01', 'High', '');
-new Task('Clean the bathroom', '2024-08-03', 'High', '');
-let test = new Task('Pick up new clothes', '2024-08-04', 'Medium', '');
-new Task('Read 20 pages of the book', '2024-09-01', 'Low', '');
+new Task('Buy oat milk', '2024-08-01', 'high', '');
+new Task('Clean the bathroom', '2024-08-03', 'high', '');
+let test = new Task('Pick up new clothes', '2024-08-04', 'medium', '');
+new Task('Read 20 pages of the book', '2024-09-01', 'low', '');
 
 TaskList.getActiveList().tasks[test.id]
 

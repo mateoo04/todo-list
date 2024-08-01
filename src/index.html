@@ -46,11 +46,11 @@
     <dialog class="edit-task-dialog">
         <form action="" method="post">
             <label for="title-input">Title</label>
-            <input type="text" name="title" id="title-input">
+            <input type="text" name="title" id="edit-title-input">
             <label for="due-date-input">Due Date</label>
-            <input type="date" name="due-date" id="due-date-input">
+            <input type="date" name="due-date" id="edit-due-date-input">
             <label for="priority-input">Priority
-                <select name="priority" id="priority-input">
+                <select name="priority" id="edit-priority-input">
                     <option value="none" selected>None</option>
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -58,9 +58,9 @@
                 </select>
             </label>
             <label for="note">Note</label>
-            <textarea name="note" id="note-input" rows="4"></textarea>
+            <textarea name="note" id="edit-note-input" rows="4"></textarea>
             <input type="submit" value="SAVE CHANGES" class="submit-task-button">
-            <button type="button" class="cancel-dialog-button">CANCEL</button>
+            <button type="button" class="close-dialog-button">CANCEL</button>
         </form>
     </dialog>
 

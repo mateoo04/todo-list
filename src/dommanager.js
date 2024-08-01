@@ -5,9 +5,11 @@ import listMarker from './chevron-icon.svg';
 
 const taskList = document.querySelector('.task-list');
 const messageDialog = document.querySelector('.message-dialog');
+const editTaskDialog = document.querySelector('.edit-task-dialog');
 
 export function setUpUserInterface() {
-    const NEW_TASK = 'new task created', NEW_LIST = 'new list created', SHOW_ALL_TASKS = 'show all tasks';
+    const NEW_TASK = 'new task created', NEW_LIST = 'new list created', 
+    SHOW_ALL_TASKS = 'show all tasks';
 
     const addTaskButton = document.querySelector('.add-task');
     const newTaskDialog = document.querySelector('.new-task-dialog');
@@ -44,7 +46,6 @@ export function setUpUserInterface() {
 
     document.querySelector('.add-list-button').addEventListener('click', () => {
         newListDialog.showModal();
-        console.log('clicked');
     });
 
     const newListForm = document.querySelector('.new-list-dialog form');
@@ -69,6 +70,9 @@ export function setUpUserInterface() {
 
             if (messageDialog.open)
                 messageDialog.close();
+
+            if(editTaskDialog.open)
+                editTaskDialog.close();
         });
     });
 
@@ -96,7 +100,7 @@ function generateTaskItemElement(task) {
     checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
             requestTaskChanges({ id: task.id, isDone: true });
-        } else if(!checkbox.checked){
+        } else if (!checkbox.checked) {
             requestTaskChanges({ id: task.id, isDone: false });
         }
     });
@@ -114,11 +118,13 @@ function generateTaskItemElement(task) {
 
     taskInfo.append(taskTitle, taskDueDate);
 
+    const EDIT_TASK = 'edit task button clicked';
+
     const detailsButton = document.createElement('button');
     detailsButton.classList.add('details-button');
     detailsButton.style.backgroundImage = `url(${detailsIcon})`;
     detailsButton.addEventListener('click', () => {
-
+        PubSub.publish(EDIT_TASK, task.id);
     });
 
     const deleteTaskButton = document.createElement('button');
@@ -175,15 +181,38 @@ export function updateActiveListHeader(title) {
     activeListHeader.textContent = title;
 }
 
-function requestTaskChanges({ id, name = '', dueDate = '', priority = '', note = '', isDone = '' }) {
+function requestTaskChanges(changeObject) {
     const TASK_MODIFICATION = 'task modified';
 
-    let changeObject = { id };
-    if (name !== '') changeObject.name = name;
-    if (dueDate !== '') changeObject.dueDate = dueDate;
-    if (priority !== '') changeObject.priority = priority;
-    if (note !== '') changeObject.note = note;
-    if (isDone !== '') changeObject.isDone = isDone;
-
     PubSub.publish(TASK_MODIFICATION, changeObject);
+}
+
+export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNote){
+    const editTaskForm = document.querySelector('.edit-task-dialog form');
+    const titleInput = document.querySelector('#edit-title-input');
+    const dueDateInput = document.querySelector('#edit-due-date-input');
+    const priorityInput = document.querySelector('#edit-priority-input');
+    const noteInput = document.querySelector('#edit-note-input');
+
+    titleInput.value = `${setTitle}`;
+    dueDateInput.value = setDueDate;
+    priorityInput.value = setPriority.toLowerCase();
+    noteInput.value = setNote;
+
+    const submitEditFormHandler = (event)=>{
+        event.preventDefault();
+    
+        console.log('id: ' +id);
+        requestTaskChanges({id: id, title: titleInput.value, nonFormattedDueDate: dueDateInput.value, priority: priorityInput.value, note: noteInput.value});
+    
+        editTaskDialog.close();
+        editTaskForm.reset();
+        console.log('submitEditFormHandler');
+
+        editTaskForm.removeEventListener('submit', submitEditFormHandler);
+    };
+
+    editTaskDialog.showModal();
+
+    editTaskForm.addEventListener('submit', submitEditFormHandler);
 }
