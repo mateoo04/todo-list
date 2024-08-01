@@ -81,13 +81,9 @@ export function setUpUserInterface() {
 export function updateTaskList(list) {
     taskList.innerHTML = '';
 
-    // for (let i = 0; i < list.tasks.length; i++) {
-    //     taskList.append(generateTaskItemElement(list.tasks[i]));
-    // }
-
-    list.tasks.forEach((value, key)=>{
+    list.tasks.forEach((value, key) => {
         taskList.append(generateTaskItemElement(value));
-    })
+    });
 }
 
 function generateTaskItemElement(task) {
@@ -97,6 +93,11 @@ function generateTaskItemElement(task) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = task.title;
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+            makeChangeOnTask({ id: task.id })
+        }
+    });
 
     const taskInfo = document.createElement('div');
     taskInfo.classList.add('task-info');
@@ -161,7 +162,7 @@ export function showAllTasks(lists) {
 
     for (let i = 0; i < lists.length; i++) {
 
-        lists[i].tasks.forEach((value, key)=>{
+        lists[i].tasks.forEach((value, key) => {
             taskList.append(generateTaskItemElement(value));
         })
     }
@@ -170,4 +171,17 @@ export function showAllTasks(lists) {
 export function updateActiveListHeader(title) {
     const activeListHeader = document.querySelector('.active-list-header');
     activeListHeader.textContent = title;
+}
+
+function makeChangeOnTask({ id, name = '', dueDate = '', priority = '', note = '', isDone = '' }) {
+    const TASK_MODIFICATION = 'task modified';
+
+    let changeObject = { id };
+    if (name !== '') changeObject.name = name;
+    if (dueDate !== '') changeObject.dueDate = dueDate;
+    if (priority !== '') changeObject.priority = priority;
+    if (note !== '') changeObject.note = note;
+    if (isDone !== '') changeObject.isDone = isDone;
+
+    PubSub.publish(TASK_MODIFICATION, changeObject);
 }

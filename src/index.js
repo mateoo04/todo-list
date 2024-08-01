@@ -4,12 +4,11 @@ import PubSub from 'pubsub-js';
 import { format, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
-    ACTIVE_LIST_CHANGE = 'active list changed', SHOW_ALL_TASKS = 'show all tasks';
+    ACTIVE_LIST_CHANGE = 'active list changed', SHOW_ALL_TASKS = 'show all tasks', TASK_MODIFICATION = 'task modified';;
 
 class TaskList {
     tasks = new Map();
 
-    // tasks = [];
     static allLists = [];
     static activeList = this;
 
@@ -29,10 +28,20 @@ class TaskList {
         return this.activeList;
     }
 
-    addTask(task) {
-        // this.tasks.push(task);
+    static getTaskById(task){
+        for(const list of TaskList.allLists){
+            // const foundItem = list.find((item)=> item.id === task.item);
+            // if(foundItem !== undefined) return foundItem;
+            for(const item of list.tasks){
+                if(item.id === task.id) return item;
+            }
+        }
 
-        this.tasks.set(generateId(), task);
+        return null;
+    }
+
+    addTask(task) {
+        this.tasks.set(task.id, task);
     }
 
     setAsActive() {
@@ -49,9 +58,11 @@ class Task {
 
         if (dueDate != '')
             this.dueDate = getDate(dueDate);
+
         this.priority = priority;
         this.note = note;
         this.isDone = false;
+        this.id = generateId();
 
         //add to task list
         TaskList.getActiveList().addTask(this);
@@ -109,6 +120,10 @@ PubSub.subscribe(SHOW_ALL_TASKS, () => {
     requestShowAllTasks();
 })
 
+PubSub.subscribe(TASK_MODIFICATION, (msg,data) =>{
+    console.log()
+});
+
 //get better looking date form
 function getDate(string) {
     const year = parseInt(string.substr(0, 4));
@@ -138,9 +153,14 @@ function generateId() {
 //preloaded tasks
 new Task('Buy oat milk', '2024-08-01', 'High', '');
 new Task('Clean the bathroom', '2024-08-03', 'High', '');
-new Task('Pick up new clothes', '2024-08-04', 'Medium', '');
+let test = new Task('Pick up new clothes', '2024-08-04', 'Medium', '');
 new Task('Read 20 pages of the book', '2024-09-01', 'Low', '');
 
-console.log(TaskList.getActiveList().tasks);
+TaskList.getActiveList().tasks[test.id]
 
 requestTaskListUpdate();
+
+// console.log(test.id);
+// console.log(TaskList.getActiveList().tasks.get(test.id));
+
+// console.log(TaskList.getTaskById(test.id)[1].title);
