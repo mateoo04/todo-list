@@ -28,12 +28,10 @@ class TaskList {
         return this.activeList;
     }
 
-    static getTaskById(task){
+    static getTaskById(taskId){
         for(const list of TaskList.allLists){
-            // const foundItem = list.find((item)=> item.id === task.item);
-            // if(foundItem !== undefined) return foundItem;
             for(const item of list.tasks){
-                if(item.id === task.id) return item;
+                if(item[1].id === taskId) return item[1];
             }
         }
 
@@ -121,7 +119,13 @@ PubSub.subscribe(SHOW_ALL_TASKS, () => {
 })
 
 PubSub.subscribe(TASK_MODIFICATION, (msg,data) =>{
-    console.log()
+    const taskForModification = TaskList.getTaskById(data.id);
+    console.log(taskForModification,data);
+
+    for(const [key, value] of Object.entries(data)){
+        console.log(key,value);
+        taskForModification[key] = value;
+    }
 });
 
 //get better looking date form
@@ -160,7 +164,4 @@ TaskList.getActiveList().tasks[test.id]
 
 requestTaskListUpdate();
 
-// console.log(test.id);
-// console.log(TaskList.getActiveList().tasks.get(test.id));
-
-// console.log(TaskList.getTaskById(test.id)[1].title);
+console.log(TaskList.getTaskById(test.id));

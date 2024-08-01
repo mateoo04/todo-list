@@ -95,7 +95,9 @@ function generateTaskItemElement(task) {
     checkbox.id = task.title;
     checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
-            makeChangeOnTask({ id: task.id })
+            requestTaskChanges({ id: task.id, isDone: true });
+        } else if(!checkbox.checked){
+            requestTaskChanges({ id: task.id, isDone: false });
         }
     });
 
@@ -173,7 +175,7 @@ export function updateActiveListHeader(title) {
     activeListHeader.textContent = title;
 }
 
-function makeChangeOnTask({ id, name = '', dueDate = '', priority = '', note = '', isDone = '' }) {
+function requestTaskChanges({ id, name = '', dueDate = '', priority = '', note = '', isDone = '' }) {
     const TASK_MODIFICATION = 'task modified';
 
     let changeObject = { id };
