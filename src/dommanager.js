@@ -98,9 +98,6 @@ function generateTaskItemElement(task) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = task.title;
-    if (task.isDone) {
-        checkbox.checked = true;
-    }
 
     checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
@@ -116,6 +113,11 @@ function generateTaskItemElement(task) {
     const taskTitle = document.createElement('p');
     taskTitle.classList.add('task-title');
     taskTitle.textContent = task.title;
+
+    if (task.isDone) {
+        checkbox.checked = true;
+        taskTitle.style.textDecoration = 'line-through';
+    }
 
     const taskDueDate = document.createElement('p');
     if (task.dueDate !== '') {
@@ -138,11 +140,10 @@ function generateTaskItemElement(task) {
     deleteTaskButton.classList.add('delete-task-button');
     deleteTaskButton.style.backgroundImage = `url(${removeIcon})`;
     deleteTaskButton.addEventListener('click', () => {
-        console.log('delete ' + task.title)
         requestTaskDeletion(task.id);
     });
 
-    switch(task.priority){
+    switch (task.priority) {
         case 'low': taskItem.classList.add('low-priority'); break;
         case 'medium': taskItem.classList.add('medium-priority'); break;
         case 'high': taskItem.classList.add('high-priority'); break;
@@ -166,11 +167,12 @@ function generateTaskItemElement(task) {
 
     onHoverDetails.append(priorityDetail, noetDetail);
 
-    taskItem.addEventListener('click', ()=>{
-        if(!detailsOpen){taskItem.append(onHoverDetails);
+    taskItem.addEventListener('click', () => {
+        if (!detailsOpen) {
+            taskItem.append(onHoverDetails);
             detailsOpen = true;
         }
-        else{
+        else {
             taskItem.removeChild(onHoverDetails);
             detailsOpen = false;
         }
@@ -290,8 +292,6 @@ export function populateListSelect(lists) {
     select.innerHTML = '';
 
     lists.forEach((taskList) => {
-        console.log(taskList);
-
         const option = document.createElement('option');
         option.value = taskList.title;
         option.innerHTML = taskList.title;

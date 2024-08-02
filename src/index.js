@@ -46,6 +46,16 @@ class TaskList {
         return null;
     }
 
+    static getListOfTaskByTaskId(taskId) {
+        for (const list of TaskList.allLists) {
+            for (const item of list.tasks) {
+                if (item[1].id === taskId) return list;
+            }
+        }
+
+        return null;
+    }
+
     static deleteTask(taskId) {
         for (const list of TaskList.allLists) {
             for (const item of list.tasks) {
@@ -72,7 +82,7 @@ class TaskList {
 }
 
 class Task {
-    constructor(title, listTitle, nonFormattedDueDate = '', priority = '', note = '', isRetrieving = false) {
+    constructor(title, listTitle, nonFormattedDueDate = '', priority = '', note = '', isDone = false, isRetrieving = false) {
         this.title = title;
         this.nonFormattedDueDate = nonFormattedDueDate;
 
@@ -80,7 +90,7 @@ class Task {
 
         this.priority = priority;
         this.note = note;
-        this.isDone = false;
+        this.isDone = isDone;
         this.id = generateId();
 
         //add to task list
@@ -167,6 +177,7 @@ PubSub.subscribe(TASK_MODIFICATION, (msg, changeObject) => {
     }
 
     requestUpdateTaskListInterface();
+    saveDataToLocalStorage(TaskList.getListOfTaskByTaskId(changeObject.id));
 });
 
 PubSub.subscribe(EDIT_TASK, (msg, selectedTask) => {
@@ -248,7 +259,6 @@ function saveDataToLocalStorage(taskList) {
         taskList.tasks.forEach((task) => {
             tasksArray.push(task);
         });
-
         localStorage[taskList.title] = JSON.stringify(tasksArray);
     }
 }
@@ -261,7 +271,7 @@ function retrieveDataFromLocalStorage() {
             new TaskList(key, true);
             const listOfTasks = JSON.parse(localStorage.getItem(key));
             listOfTasks.forEach((task) => {
-                new Task(task.title, key, task.nonFormattedDueDate, task.priority, task.note);
+                new Task(task.title, key, task.nonFormattedDueDate, task.priority, task.note, task.isDone);
             });
 
         }
