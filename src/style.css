@@ -3,6 +3,12 @@
     --light-accent-color: #fcf3f2;
 }
 
+@font-face {
+    font-family: 'Playwrite';
+    src: url('./Playwrite.woff2') format('woff2'),
+    url('./Playwrite.woff') format('woff');
+}
+
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -19,6 +25,11 @@ body {
     color: #fff;
     padding: 0px 20px;
     font-size: 1.2em;
+}
+
+h1{
+    font-family: 'Playwrite', Arial;
+    font-size: 2.2em;
 }
 
 .menu .all-tasks,
