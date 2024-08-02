@@ -12,7 +12,6 @@ class TaskList {
     tasks = new Map();
 
     static allLists = [];
-    static activeList = this;
 
     constructor(title) {
         this.title = title;
@@ -28,6 +27,10 @@ class TaskList {
 
     static getActiveList() {
         return this.activeList;
+    }
+
+    static resetActiveList() {
+        this.activeList = -1;
     }
 
     static getTaskById(taskId) {
@@ -58,12 +61,12 @@ class TaskList {
         TaskList.activeList = this;
         requestUpdateActiveListHeader(this.title);
 
-        requestTaskListUpdate();
+        requestUpdateTaskListInterface();
     }
 }
 
 class Task {
-    constructor(title, nonFormattedDueDate = '', priority = '', note = '') {
+    constructor(title, listTitle, nonFormattedDueDate = '', priority = '', note = '') {
         this.title = title;
         this.nonFormattedDueDate = nonFormattedDueDate;
 
@@ -75,18 +78,25 @@ class Task {
         this.id = generateId();
 
         //add to task list
-        TaskList.getActiveList().addTask(this);
+        TaskList.findByTitle(listTitle).addTask(this);
     }
 }
 
 //at page loading
 setUpUserInterface();
 
-let defaultList = new TaskList('My List');
-defaultList.setAsActive();
+function requestUpdateTaskListInterface() {
+    console.log('active list:' + TaskList.getActiveList().title);
+    if (TaskList.getActiveList() === -1) {
+        requestShowAllTasks();
+    } else {
+        requestShowTasksFromList();
+    }
+}
 
 //functions which call interface updates in dommanager.js
-function requestTaskListUpdate() {
+// function requestUpdateTaskListInterface() {
+function requestShowTasksFromList() {
     updateTaskList(TaskList.getActiveList());
 }
 
@@ -109,9 +119,8 @@ function requestUpdateActiveListHeader(title) {
 //subscribing to form submits in DOM
 PubSub.subscribe(NEW_TASK, (msg, task) => {
     if (validateTitle(task.title)) {
-        TaskList.findByTitle(task.list).setAsActive();
-        new Task(task.title, task.dueDate, task.priority, task.note);
-        requestTaskListUpdate();
+        new Task(task.title, task.list, task.dueDate, task.priority, task.note);
+        requestUpdateTaskListInterface();
     }
 });
 
@@ -130,7 +139,8 @@ PubSub.subscribe(ACTIVE_LIST_CHANGE, (msg, list) => {
 });
 
 PubSub.subscribe(SHOW_ALL_TASKS, () => {
-    requestShowAllTasks();
+    requestUpdateTaskListInterface();
+    TaskList.resetActiveList();
 })
 
 PubSub.subscribe(TASK_MODIFICATION, (msg, changeObject) => {
@@ -151,7 +161,7 @@ PubSub.subscribe(TASK_MODIFICATION, (msg, changeObject) => {
         }
     }
 
-    updateTaskList(TaskList.getActiveList());
+    requestUpdateTaskListInterface();
 });
 
 PubSub.subscribe(EDIT_TASK, (msg, selectedTask) => {
@@ -163,7 +173,7 @@ PubSub.subscribe(EDIT_TASK, (msg, selectedTask) => {
 PubSub.subscribe(DELETE_TASK, (msg, id) => {
     TaskList.deleteTask(id);
 
-    updateTaskList(TaskList.getActiveList());
+    requestUpdateTaskListInterface();
 });
 
 PubSub.subscribe(POPULATE_LIST_SELECT_REQUEST, () => {
@@ -204,11 +214,25 @@ function validateTitle(title) {
 }
 
 //preloaded tasks
-new Task('Buy oat milk', '2024-08-01', 'high', '');
-new Task('Clean the bathroom', '2024-08-03', 'high', '');
-let test = new Task('Pick up new clothes', '2024-08-04', 'medium', '');
-new Task('Read 20 pages of the book', '2024-09-01', 'low', '');
+const defaultList = new TaskList('My List');
 
-TaskList.getActiveList().tasks[test.id]
+new Task('Clean the bathroom', 'My List', '2024-08-03', 'high', '');
+new Task('Pick up new clothes', 'My List', '2024-08-04', 'medium', '');
+new Task('Read 20 pages of the book', 'My List', '2024-09-01', 'low', ''); 
+new Task('Call Sarah', 'My List', '2024-08-23', 'high', '');
+new Task('Journaling', 'My List', '2024-08-23', 'high', '');
+new Task('Organize Closet', 'My List', '2024-08-23', 'medium', '');
 
-requestTaskListUpdate();
+new TaskList('Groceries');
+new Task('Oat milk', 'Groceries', '2024-08-01', 'medium', '');
+new Task('Strawberries', 'Groceries', '2024-08-01', 'medium', '');
+new Task('Chicken', 'Groceries', '2024-08-01', 'medium', '');
+new Task('Oranges', 'Groceries', '2024-08-01', 'medium', '');
+new Task('Almonds', 'Groceries', '2024-08-01', 'medium', '');
+
+new TaskList('Gym');
+new Task('Recovery Time', 'Gym', '2024-08-01', 'medium', 'Do a 10-minute foam rolling session to aid recovery');
+new Task('Strength Training', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises');
+
+defaultList.setAsActive();
+requestUpdateTaskListInterface();

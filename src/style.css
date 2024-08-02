@@ -11,7 +11,7 @@ body {
     margin: 0;
     display: grid;
     grid-template-columns: 240px 1fr;
-    grid-template-rows: 100vh;
+    grid-template-rows: max(100vh, 100%);
 }
 
 .menu {
@@ -26,7 +26,7 @@ body {
     background: transparent;
     border: 0;
     font-size: inherit;
-    padding: 0;
+    padding: 5px 0;
     color: #fff;
 }
 
@@ -111,7 +111,7 @@ input[type='submit'],
 form select,
 .close-dialog-button,
 .delete-task,
-.close-deletion-dialog-button {
+.close-deletion-dialog-button,.close-edit-dialog-button {
     border-radius: 12px;
     border: 0;
     padding: 6px 12px;
@@ -169,6 +169,10 @@ input[type='checkbox'] {
     accent-color: var(--accent-color);
 }
 
+.task-info p:first-child{
+    font-weight: 700;
+}
+
 .task-info p {
     margin: 3px 0;
     color: #323232;
@@ -183,7 +187,7 @@ input[type='checkbox'] {
     width: 26px;
     border: 0;
     background-color: var(--light-accent-color);
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 .delete-task-button {
@@ -192,7 +196,7 @@ input[type='checkbox'] {
     background-repeat: no-repeat;
     border: 0;
     background-color: var(--light-accent-color);
-    opacity: 0.5;
+    opacity: 0.8;
 }
 
 .message-dialog button {

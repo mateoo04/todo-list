@@ -39,7 +39,7 @@ export function setUpUserInterface() {
             dueDate: dueDate,
             priority: priority,
             note: note,
-            list:list
+            list: list
         });
     });
 
@@ -95,7 +95,7 @@ function generateTaskItemElement(task) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = task.title;
-    if(task.isDone){
+    if (task.isDone) {
         checkbox.checked = true;
     }
 
@@ -115,8 +115,10 @@ function generateTaskItemElement(task) {
     taskTitle.textContent = task.title;
 
     const taskDueDate = document.createElement('p');
-    taskDueDate.classList.add('task-due-date');
-    taskDueDate.textContent = task.dueDate;
+    if (task.dueDate !== '') {
+        taskDueDate.classList.add('task-due-date');
+        taskDueDate.textContent = 'Due ' + task.dueDate;
+    }
 
     taskInfo.append(taskTitle, taskDueDate);
 
@@ -151,9 +153,6 @@ export function updateListsList(taskLists, activeListTitle) {
     for (let i = 0; i < taskLists.length; i++) {
         const listItem = document.createElement('li');
         listItem.textContent = taskLists[i].title;
-
-        if (taskLists[i].title === activeListTitle)
-            listItem.style.fontWeight = 700;
 
         //click listener for lists list in menu
         listItem.addEventListener('click', () => {
@@ -220,7 +219,7 @@ export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNot
 
     editTaskForm.addEventListener('submit', submitEditFormHandler);
 
-    document.querySelector('.close-edit-dialog-button').addEventListener('click', ()=>{
+    document.querySelector('.close-edit-dialog-button').addEventListener('click', () => {
         editTaskDialog.close();
 
         editTaskForm.removeEventListener('submit', submitEditFormHandler);
@@ -250,12 +249,12 @@ function requestTaskDeletion(id) {
     });
 }
 
-export function populateListSelect(lists){
+export function populateListSelect(lists) {
     const select = document.querySelector('#list-select');
 
     select.innerHTML = '';
 
-    lists.forEach((taskList)=>{
+    lists.forEach((taskList) => {
         console.log(taskList);
 
         const option = document.createElement('option');
