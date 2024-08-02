@@ -92,6 +92,9 @@ function generateTaskItemElement(task) {
     const taskItem = document.createElement('div');
     taskItem.classList.add('task-item');
 
+    const basicInfo = document.createElement('div');
+    basicInfo.classList.add('basic-info');
+
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = task.title;
@@ -139,7 +142,39 @@ function generateTaskItemElement(task) {
         requestTaskDeletion(task.id);
     });
 
-    taskItem.append(checkbox, taskInfo, detailsButton, deleteTaskButton);
+    switch(task.priority){
+        case 'low': taskItem.classList.add('low-priority'); break;
+        case 'medium': taskItem.classList.add('medium-priority'); break;
+        case 'high': taskItem.classList.add('high-priority'); break;
+    }
+
+    basicInfo.append(checkbox, taskInfo, detailsButton, deleteTaskButton);
+
+    taskItem.append(basicInfo);
+
+    let detailsOpen = false;
+
+    const noetDetail = document.createElement('p');
+    noetDetail.classList.add('note-priority');
+    noetDetail.textContent = task.note;
+
+    const onHoverDetails = document.createElement('div');
+    onHoverDetails.classList.add('on-hover-details');
+    const priorityDetail = document.createElement('p');
+    priorityDetail.classList.add('detail-priority');
+    priorityDetail.textContent = 'Priority: ' + task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
+
+    onHoverDetails.append(priorityDetail, noetDetail);
+
+    taskItem.addEventListener('click', ()=>{
+        if(!detailsOpen){taskItem.append(onHoverDetails);
+            detailsOpen = true;
+        }
+        else{
+            taskItem.removeChild(onHoverDetails);
+            detailsOpen = false;
+        }
+    });
 
     return taskItem;
 }

@@ -214,7 +214,7 @@ function validateTitle(title) {
 }
 
 //preloaded tasks
-const defaultList = new TaskList('My List');
+if(TaskList.findByTitle('My List') === undefined){const defaultList = new TaskList('My List');
 
 new Task('Clean the bathroom', 'My List', '2024-08-03', 'high', '');
 new Task('Pick up new clothes', 'My List', '2024-08-04', 'medium', '');
@@ -231,8 +231,8 @@ new Task('Oranges', 'Groceries', '2024-08-01', 'medium', '');
 new Task('Almonds', 'Groceries', '2024-08-01', 'medium', '');
 
 new TaskList('Gym');
-new Task('Recovery Time', 'Gym', '2024-08-01', 'medium', 'Do a 10-minute foam rolling session to aid recovery');
-new Task('Strength Training', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises');
+new Task('Recovery Time', 'Gym', '2024-08-01', 'medium', 'Do a 10-minute foam rolling session to aid recovery.');
+new Task('Strength Training', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises.');
 
 defaultList.setAsActive();
-requestUpdateTaskListInterface();
+requestUpdateTaskListInterface();}

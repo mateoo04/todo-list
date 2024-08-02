@@ -124,10 +124,10 @@ form textarea {
     background-color: #f5f5f5;
 }
 
-form legend{
+form legend, .task-details-header{
     font-size: 1.4em;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin: 0 0 4px 0;
 }
 
 form label {
@@ -155,14 +155,29 @@ input[type='submit'] {
 
 /*Task item*/
 .task-item {
-    display: grid;
-    grid-template-columns: min-content 1fr repeat(2, min-content);
-    align-items: center;
-    gap: 12px;
     background-color: var(--light-accent-color);
     border-radius: 20px;
     padding: 4px 18px;
     margin-bottom: 8px;
+}
+
+.task-item:hover{
+    cursor: pointer;
+}
+
+.on-hover-details{
+    padding-left: 30px;
+}
+
+.on-hover-details > p{
+    opacity: 0.7;
+}
+
+.basic-info{
+    display: grid;
+    grid-template-columns: min-content 1fr repeat(2, min-content);
+    align-items: center;
+    gap: 12px;
 }
 
 input[type='checkbox'] {
@@ -197,6 +212,38 @@ input[type='checkbox'] {
     border: 0;
     background-color: var(--light-accent-color);
     opacity: 0.8;
+}
+
+.details-button:hover,
+.delete-task-button:hover{
+    opacity: 1;
+}
+
+.low-priority{
+    border-left: 6px solid #EF6F6C;
+}
+
+.medium-priority{
+    border-left: 6px solid #ad4f4d;
+}
+
+.high-priority{
+    border-left: 6px solid #472221;
+}
+
+option[value='low']{
+    background-color: #EF6F6C;
+    color: #fff;
+}
+
+option[value='medium']{
+    background-color: #a34b49;
+    color: #fff;
+}
+
+option[value='high']{
+    background-color: #5f2c2b;
+    color: #fff;
 }
 
 .message-dialog button {
