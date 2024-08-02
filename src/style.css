@@ -81,7 +81,7 @@ body {
     box-shadow: 1px 1px 1px #808080;
 }
 
-h2{
+h2 {
     padding: 20px 30px;
     font-size: 2em;
     color: var(--accent-color);
@@ -109,7 +109,9 @@ form input,
 textarea,
 input[type='submit'],
 form select,
-.close-dialog-button {
+.close-dialog-button,
+.delete-task,
+.close-deletion-dialog-button {
     border-radius: 12px;
     border: 0;
     padding: 6px 12px;
@@ -189,4 +191,17 @@ input[type='checkbox'] {
 
 .message-dialog button {
     width: 100%;
+}
+
+/*confirm deletion dialog button*/
+.delete-task,
+.close-deletion-dialog-button {
+    width: 100%;
+}
+
+.delete-task{
+    background-color: var(--accent-color);
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
 }

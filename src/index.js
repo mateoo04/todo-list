@@ -5,7 +5,8 @@ import { format, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
     ACTIVE_LIST_CHANGE = 'active list changed', SHOW_ALL_TASKS = 'show all tasks',
-    TASK_MODIFICATION = 'task modified', EDIT_TASK = 'edit task button clicked';;
+    TASK_MODIFICATION = 'task modified', EDIT_TASK = 'edit task button clicked',
+    DELETE_TASK = 'delete task';
 
 class TaskList {
     tasks = new Map();
@@ -37,6 +38,16 @@ class TaskList {
         }
 
         return null;
+    }
+
+    static deleteTask(taskId){
+        for (const list of TaskList.allLists) {
+            for (const item of list.tasks) {
+                if (item[1].id === taskId) {
+                    list.tasks.delete(taskId);
+                }
+            }
+        }
     }
 
     addTask(task) {
@@ -130,6 +141,8 @@ PubSub.subscribe(TASK_MODIFICATION, (msg, data) => {
             taskForModification.dueDate = getDate(value);
         }
     }
+
+    updateTaskList(TaskList.getActiveList());
 });
 
 PubSub.subscribe(EDIT_TASK, (msg, data) => {
@@ -137,6 +150,12 @@ PubSub.subscribe(EDIT_TASK, (msg, data) => {
 
     showEditTaskDialog(task.id, task.title, task.nonFormattedDueDate, task.priority, task.note);
 });
+
+PubSub.subscribe(DELETE_TASK, (msg, id)=>{
+    TaskList.deleteTask(id);
+
+    updateTaskList(TaskList.getActiveList());
+})
 
 //get better looking date form
 function getDate(string) {
@@ -171,5 +190,3 @@ new Task('Read 20 pages of the book', '2024-09-01', 'low', '');
 TaskList.getActiveList().tasks[test.id]
 
 requestTaskListUpdate();
-
-console.log(TaskList.getTaskById(test.id));

@@ -8,8 +8,8 @@ const messageDialog = document.querySelector('.message-dialog');
 const editTaskDialog = document.querySelector('.edit-task-dialog');
 
 export function setUpUserInterface() {
-    const NEW_TASK = 'new task created', NEW_LIST = 'new list created', 
-    SHOW_ALL_TASKS = 'show all tasks';
+    const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
+        SHOW_ALL_TASKS = 'show all tasks';
 
     const addTaskButton = document.querySelector('.add-task');
     const newTaskDialog = document.querySelector('.new-task-dialog');
@@ -38,7 +38,6 @@ export function setUpUserInterface() {
             priority: priority,
             note: note
         });
-
     });
 
     //set up dialog for adding new lists
@@ -71,7 +70,7 @@ export function setUpUserInterface() {
             if (messageDialog.open)
                 messageDialog.close();
 
-            if(editTaskDialog.open)
+            if (editTaskDialog.open)
                 editTaskDialog.close();
         });
     });
@@ -130,6 +129,10 @@ function generateTaskItemElement(task) {
     const deleteTaskButton = document.createElement('button');
     deleteTaskButton.classList.add('delete-task-button');
     deleteTaskButton.style.backgroundImage = `url(${removeIcon})`;
+    deleteTaskButton.addEventListener('click', () => {
+        console.log('delete ' + task.title)
+        requestTaskDeletion(task.id);
+    });
 
     taskItem.append(checkbox, taskInfo, detailsButton, deleteTaskButton);
 
@@ -187,7 +190,7 @@ function requestTaskChanges(changeObject) {
     PubSub.publish(TASK_MODIFICATION, changeObject);
 }
 
-export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNote){
+export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNote) {
     const editTaskForm = document.querySelector('.edit-task-dialog form');
     const titleInput = document.querySelector('#edit-title-input');
     const dueDateInput = document.querySelector('#edit-due-date-input');
@@ -199,15 +202,13 @@ export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNot
     priorityInput.value = setPriority.toLowerCase();
     noteInput.value = setNote;
 
-    const submitEditFormHandler = (event)=>{
+    const submitEditFormHandler = (event) => {
         event.preventDefault();
-    
-        console.log('id: ' +id);
-        requestTaskChanges({id: id, title: titleInput.value, nonFormattedDueDate: dueDateInput.value, priority: priorityInput.value, note: noteInput.value});
-    
+
+        requestTaskChanges({ id: id, title: titleInput.value, nonFormattedDueDate: dueDateInput.value, priority: priorityInput.value, note: noteInput.value });
+
         editTaskDialog.close();
         editTaskForm.reset();
-        console.log('submitEditFormHandler');
 
         editTaskForm.removeEventListener('submit', submitEditFormHandler);
     };
@@ -215,4 +216,27 @@ export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNot
     editTaskDialog.showModal();
 
     editTaskForm.addEventListener('submit', submitEditFormHandler);
+}
+
+function requestTaskDeletion(id) {
+    const confirmDeletionDialog = document.querySelector('.confirm-deletion-dialog');
+    const deleteButton = document.querySelector('.delete-task');
+
+    const deleteTask = () => {
+        const DELETE_TASK = 'delete task';
+        PubSub.publish(DELETE_TASK, id);
+
+        confirmDeletionDialog.close();
+
+        deleteButton.removeEventListener('click', deleteTask);
+    };
+
+    //confirming if user wants task to be deleted
+    confirmDeletionDialog.showModal();
+    deleteButton.addEventListener('click', deleteTask);
+
+    document.querySelector('.close-deletion-dialog-button').addEventListener('click', () => {
+        confirmDeletionDialog.close();
+        deleteButton.removeEventListener('click', deleteTask);
+    });
 }
