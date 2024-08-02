@@ -10,15 +10,18 @@ const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
 
 class TaskList {
     tasks = new Map();
-
+    static activeList = -1;
     static allLists = [];
 
-    constructor(title) {
+    constructor(title, isRetrieving = false) {
         this.title = title;
         TaskList.allLists.push(this);
         this.setAsActive();
 
         requestListsListUpdate();
+
+        if (isRetrieving === false)
+            saveDataToLocalStorage(this);
     }
 
     static findByTitle(title) {
@@ -30,7 +33,7 @@ class TaskList {
     }
 
     static resetActiveList() {
-        this.activeList = -1;
+        TaskList.activeList = -1;
     }
 
     static getTaskById(taskId) {
@@ -53,8 +56,11 @@ class TaskList {
         }
     }
 
-    addTask(task) {
+    addTask(task, isRetrieving = false) {
         this.tasks.set(task.id, task);
+
+        if (isRetrieving === false)
+            saveDataToLocalStorage(this);
     }
 
     setAsActive() {
@@ -66,7 +72,7 @@ class TaskList {
 }
 
 class Task {
-    constructor(title, listTitle, nonFormattedDueDate = '', priority = '', note = '') {
+    constructor(title, listTitle, nonFormattedDueDate = '', priority = '', note = '', isRetrieving = false) {
         this.title = title;
         this.nonFormattedDueDate = nonFormattedDueDate;
 
@@ -78,7 +84,7 @@ class Task {
         this.id = generateId();
 
         //add to task list
-        TaskList.findByTitle(listTitle).addTask(this);
+        TaskList.findByTitle(listTitle).addTask(this, isRetrieving);
     }
 }
 
@@ -86,7 +92,6 @@ class Task {
 setUpUserInterface();
 
 function requestUpdateTaskListInterface() {
-    console.log('active list:' + TaskList.getActiveList().title);
     if (TaskList.getActiveList() === -1) {
         requestShowAllTasks();
     } else {
@@ -213,26 +218,82 @@ function validateTitle(title) {
     return true;
 }
 
+function storageAvailable(type) {
+    let storage;
+    try {
+        storage = window[type];
+        const x = "__storage_test__";
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    } catch (e) {
+        return (
+            e instanceof DOMException &&
+            e.name === "QuotaExceededError" &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage &&
+            storage.length !== 0
+        );
+    }
+}
+
+function saveDataToLocalStorage(taskList) {
+    if (storageAvailable("localStorage")) {
+        if (!localStorage.getItem(taskList.title)) {
+            localStorage.setItem(taskList.title, {});
+        }
+
+        const tasksArray = [];
+
+        taskList.tasks.forEach((task) => {
+            tasksArray.push(task);
+        });
+
+        localStorage[taskList.title] = JSON.stringify(tasksArray);
+    }
+}
+
+function retrieveDataFromLocalStorage() {
+    if (storageAvailable("localStorage")) {
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+
+            new TaskList(key, true);
+            const listOfTasks = JSON.parse(localStorage.getItem(key));
+            listOfTasks.forEach((task) => {
+                new Task(task.title, key, task.nonFormattedDueDate, task.priority, task.note);
+            });
+
+        }
+
+        requestUpdateTaskListInterface();
+    }
+}
+
+retrieveDataFromLocalStorage();
+
 //preloaded tasks
-if(TaskList.findByTitle('My List') === undefined){const defaultList = new TaskList('My List');
+if (TaskList.findByTitle('My List') === undefined) {
+    const defaultList = new TaskList('My List');
 
-new Task('Clean the bathroom', 'My List', '2024-08-03', 'high', '');
-new Task('Pick up new clothes', 'My List', '2024-08-04', 'medium', '');
-new Task('Read 20 pages of the book', 'My List', '2024-09-01', 'low', ''); 
-new Task('Call Sarah', 'My List', '2024-08-23', 'high', '');
-new Task('Journaling', 'My List', '2024-08-23', 'high', '');
-new Task('Organize Closet', 'My List', '2024-08-23', 'medium', '');
+    new Task('Clean the bathroom', 'My List', '2024-08-03', 'high', '');
+    new Task('Pick up new clothes', 'My List', '2024-08-04', 'medium', '');
+    new Task('Read 20 pages of the book', 'My List', '2024-09-01', 'low', '');
+    new Task('Call Sarah', 'My List', '2024-08-23', 'high', '');
+    new Task('Journaling', 'My List', '2024-08-23', 'high', '');
+    new Task('Organize Closet', 'My List', '2024-08-23', 'medium', '');
 
-new TaskList('Groceries');
-new Task('Oat milk', 'Groceries', '2024-08-01', 'medium', '');
-new Task('Strawberries', 'Groceries', '2024-08-01', 'medium', '');
-new Task('Chicken', 'Groceries', '2024-08-01', 'medium', '');
-new Task('Oranges', 'Groceries', '2024-08-01', 'medium', '');
-new Task('Almonds', 'Groceries', '2024-08-01', 'medium', '');
+    new TaskList('Groceries');
+    new Task('Oat milk', 'Groceries', '2024-08-01', 'medium', '');
+    new Task('Strawberries', 'Groceries', '2024-08-01', 'medium', '');
+    new Task('Chicken', 'Groceries', '2024-08-01', 'medium', '');
+    new Task('Oranges', 'Groceries', '2024-08-01', 'medium', '');
+    new Task('Almonds', 'Groceries', '2024-08-01', 'medium', '');
 
-new TaskList('Gym');
-new Task('Recovery Time', 'Gym', '2024-08-01', 'medium', 'Do a 10-minute foam rolling session to aid recovery.');
-new Task('Strength Training', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises.');
+    new TaskList('Gym');
+    new Task('Recovery Time', 'Gym', '2024-08-01', 'medium', 'Do a 10-minute foam rolling session to aid recovery.');
+    new Task('Strength Training', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises.');
 
-defaultList.setAsActive();
-requestUpdateTaskListInterface();}
+    defaultList.setAsActive();
+    requestUpdateTaskListInterface();
+}
