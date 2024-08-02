@@ -24,8 +24,11 @@
 
     <dialog class="new-task-dialog">
         <form action="" method="post">
+            <legend>New Task</legend>
+            <label for="list-select">List</label>
+            <select name="list" id="list-select"></select>
             <label for="title-input">Title</label>
-            <input type="text" name="title" id="title-input">
+            <input type="text" name="title" id="title-input" pattern=".{2,}">
             <label for="due-date-input">Due Date</label>
             <input type="date" name="due-date" id="due-date-input">
             <label for="priority-input">Priority
@@ -38,15 +41,16 @@
             </label>    
             <label for="note">Note</label>
             <textarea name="note" id="note-input" rows="4"></textarea>
-            <input type="submit" value="ADD NEW TASK">
+            <input type="submit" value="ADD">
             <button type="button" class="close-dialog-button">CANCEL</button>
         </form>
     </dialog>
 
     <dialog class="edit-task-dialog">
         <form action="" method="post">
+            <legend>Edit Task</legend>
             <label for="title-input">Title</label>
-            <input type="text" name="title" id="edit-title-input">
+            <input type="text" name="title" id="edit-title-input" pattern=".{2,}">
             <label for="due-date-input">Due Date</label>
             <input type="date" name="due-date" id="edit-due-date-input">
             <label for="priority-input">Priority
@@ -60,12 +64,13 @@
             <label for="note">Note</label>
             <textarea name="note" id="edit-note-input" rows="4"></textarea>
             <input type="submit" value="SAVE CHANGES" class="submit-task-button">
-            <button type="button" class="close-dialog-button">CANCEL</button>
+            <button type="button" class="close-edit-dialog-button">CANCEL</button>
         </form>
     </dialog>
 
     <dialog class="new-list-dialog">
         <form action="" method="post">
+            <legend>New List</legend>
             <label for="list-title">List Title</label>
             <input type="text" name="list-title" id="list-title" pattern=".{2,}">
             <input type="submit" name="submit" id="submit" value="CREATE LIST">

@@ -1,12 +1,12 @@
 import './style.css';
-import { setUpUserInterface, updateTaskList, updateListsList, showMessage, showAllTasks, updateActiveListHeader, showEditTaskDialog } from './dommanager.js';
+import { setUpUserInterface, updateTaskList, updateListsList, showMessage, showAllTasks, updateActiveListHeader, showEditTaskDialog, populateListSelect } from './dommanager.js';
 import PubSub from 'pubsub-js';
 import { format, isToday, isTomorrow, isThisWeek } from 'date-fns';
 
 const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
     ACTIVE_LIST_CHANGE = 'active list changed', SHOW_ALL_TASKS = 'show all tasks',
     TASK_MODIFICATION = 'task modified', EDIT_TASK = 'edit task button clicked',
-    DELETE_TASK = 'delete task';
+    DELETE_TASK = 'delete task', POPULATE_LIST_SELECT_REQUEST = 'populate list select request';
 
 class TaskList {
     tasks = new Map();
@@ -40,7 +40,7 @@ class TaskList {
         return null;
     }
 
-    static deleteTask(taskId){
+    static deleteTask(taskId) {
         for (const list of TaskList.allLists) {
             for (const item of list.tasks) {
                 if (item[1].id === taskId) {
@@ -107,22 +107,25 @@ function requestUpdateActiveListHeader(title) {
 }
 
 //subscribing to form submits in DOM
-PubSub.subscribe(NEW_TASK, (msg, data) => {
-    new Task(data.title, data.dueDate, data.priority, data.note);
-    requestTaskListUpdate();
+PubSub.subscribe(NEW_TASK, (msg, task) => {
+    if (validateTitle(task.title)) {
+        TaskList.findByTitle(task.list).setAsActive();
+        new Task(task.title, task.dueDate, task.priority, task.note);
+        requestTaskListUpdate();
+    }
 });
 
-PubSub.subscribe(NEW_LIST, (msg, data) => {
-    if (data.length >= 2 && TaskList.findByTitle(data) === undefined) {
-        new TaskList(data);
+PubSub.subscribe(NEW_LIST, (msg, newListTitle) => {
+    if (validateTitle(newListTitle) && TaskList.findByTitle(newListTitle) === undefined) {
+        new TaskList(newListTitle);
         requestListsListUpdate();
     } else {
         requestMessageDialog('The name you entered is either not valid or is already in use.')
     }
 });
 
-PubSub.subscribe(ACTIVE_LIST_CHANGE, (msg, data) => {
-    data.setAsActive();
+PubSub.subscribe(ACTIVE_LIST_CHANGE, (msg, list) => {
+    list.setAsActive();
     requestListsListUpdate();
 });
 
@@ -130,31 +133,41 @@ PubSub.subscribe(SHOW_ALL_TASKS, () => {
     requestShowAllTasks();
 })
 
-PubSub.subscribe(TASK_MODIFICATION, (msg, data) => {
-    const taskForModification = TaskList.getTaskById(data.id);
+PubSub.subscribe(TASK_MODIFICATION, (msg, changeObject) => {
+    if ('title' in changeObject) {
+        if (!validateTitle(changeObject.title)) return -1;
+    }
 
-    for (const [key, value] of Object.entries(data)) {
-        if(taskForModification[key] === value) continue;
+    const taskForModification = TaskList.getTaskById(changeObject.id);
+
+    for (const [key, value] of Object.entries(changeObject)) {
+        if (taskForModification[key] === value) continue;
         taskForModification[key] = value;
 
         if (key === 'nonFormattedDueDate') {
-            taskForModification.dueDate = getDate(value);
+            if (value === '') taskForModification.dueDate = '';
+            else
+                taskForModification.dueDate = getDate(value);
         }
     }
 
     updateTaskList(TaskList.getActiveList());
 });
 
-PubSub.subscribe(EDIT_TASK, (msg, data) => {
-    const task = TaskList.getTaskById(data);
+PubSub.subscribe(EDIT_TASK, (msg, selectedTask) => {
+    const task = TaskList.getTaskById(selectedTask);
 
     showEditTaskDialog(task.id, task.title, task.nonFormattedDueDate, task.priority, task.note);
 });
 
-PubSub.subscribe(DELETE_TASK, (msg, id)=>{
+PubSub.subscribe(DELETE_TASK, (msg, id) => {
     TaskList.deleteTask(id);
 
     updateTaskList(TaskList.getActiveList());
+});
+
+PubSub.subscribe(POPULATE_LIST_SELECT_REQUEST, () => {
+    populateListSelect(TaskList.allLists);
 })
 
 //get better looking date form
@@ -179,6 +192,15 @@ function getDate(string) {
 
 function generateId() {
     return `${TaskList.getActiveList().title.toLowerCase().replaceAll(' ', '')}-` + Date.now().toString().slice(-8) + '-' + Math.floor(Math.random() * 10000);
+}
+
+function validateTitle(title) {
+    if (title.length < 2) {
+        showMessage('Title you entered is too short.');
+        return false;
+    }
+
+    return true;
 }
 
 //preloaded tasks

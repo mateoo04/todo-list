@@ -9,13 +9,14 @@ const editTaskDialog = document.querySelector('.edit-task-dialog');
 
 export function setUpUserInterface() {
     const NEW_TASK = 'new task created', NEW_LIST = 'new list created',
-        SHOW_ALL_TASKS = 'show all tasks';
+        SHOW_ALL_TASKS = 'show all tasks', POPULATE_LIST_SELECT_REQUEST = 'populate list select request';
 
     const addTaskButton = document.querySelector('.add-task');
     const newTaskDialog = document.querySelector('.new-task-dialog');
 
     //Add task ('+') button click listener
     addTaskButton.addEventListener('click', () => {
+        PubSub.publish(POPULATE_LIST_SELECT_REQUEST);
         newTaskDialog.showModal();
     });
 
@@ -28,6 +29,7 @@ export function setUpUserInterface() {
         const dueDate = document.querySelector('#due-date-input').value;
         const priority = document.querySelector('#priority-input').value;
         const note = document.querySelector('#note-input').value;
+        const list = document.querySelector('#list-select').value;
 
         newTaskForm.reset();
         newTaskDialog.close();
@@ -36,7 +38,8 @@ export function setUpUserInterface() {
             title: title,
             dueDate: dueDate,
             priority: priority,
-            note: note
+            note: note,
+            list:list
         });
     });
 
@@ -60,18 +63,14 @@ export function setUpUserInterface() {
     const closeDialogButtons = document.querySelectorAll('.close-dialog-button');
     closeDialogButtons.forEach((element) => {
         element.addEventListener('click', () => {
-            if (newListDialog.open) {
+            if (newListDialog.open)
                 newListDialog.close();
-            }
 
             if (newTaskDialog.open)
                 newTaskDialog.close();
 
             if (messageDialog.open)
                 messageDialog.close();
-
-            if (editTaskDialog.open)
-                editTaskDialog.close();
         });
     });
 
@@ -96,6 +95,10 @@ function generateTaskItemElement(task) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.id = task.title;
+    if(task.isDone){
+        checkbox.checked = true;
+    }
+
     checkbox.addEventListener('change', () => {
         if (checkbox.checked) {
             requestTaskChanges({ id: task.id, isDone: true });
@@ -216,6 +219,12 @@ export function showEditTaskDialog(id, setTitle, setDueDate, setPriority, setNot
     editTaskDialog.showModal();
 
     editTaskForm.addEventListener('submit', submitEditFormHandler);
+
+    document.querySelector('.close-edit-dialog-button').addEventListener('click', ()=>{
+        editTaskDialog.close();
+
+        editTaskForm.removeEventListener('submit', submitEditFormHandler);
+    })
 }
 
 function requestTaskDeletion(id) {
@@ -238,5 +247,21 @@ function requestTaskDeletion(id) {
     document.querySelector('.close-deletion-dialog-button').addEventListener('click', () => {
         confirmDeletionDialog.close();
         deleteButton.removeEventListener('click', deleteTask);
+    });
+}
+
+export function populateListSelect(lists){
+    const select = document.querySelector('#list-select');
+
+    select.innerHTML = '';
+
+    lists.forEach((taskList)=>{
+        console.log(taskList);
+
+        const option = document.createElement('option');
+        option.value = taskList.title;
+        option.innerHTML = taskList.title;
+
+        select.append(option);
     });
 }
