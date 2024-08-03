@@ -193,7 +193,7 @@ PubSub.subscribe(DELETE_TASK, (msg, id) => {
 });
 
 PubSub.subscribe(POPULATE_LIST_SELECT_REQUEST, () => {
-    populateListSelect(TaskList.allLists);
+    populateListSelect(TaskList.allLists, TaskList.getActiveList().title);
 })
 
 //get better looking date form

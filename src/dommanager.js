@@ -286,15 +286,18 @@ function requestTaskDeletion(id) {
     });
 }
 
-export function populateListSelect(lists) {
+export function populateListSelect(lists, activeListTitle) {
     const select = document.querySelector('#list-select');
-
+    
     select.innerHTML = '';
 
     lists.forEach((taskList) => {
         const option = document.createElement('option');
         option.value = taskList.title;
         option.innerHTML = taskList.title;
+
+        if(taskList.title === activeListTitle)
+            option.selected = 'selected';
 
         select.append(option);
     });
