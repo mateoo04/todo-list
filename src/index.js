@@ -269,6 +269,7 @@ function retrieveDataFromLocalStorage() {
             const key = localStorage.key(i);
 
             new TaskList(key, true);
+
             const listOfTasks = JSON.parse(localStorage.getItem(key));
             listOfTasks.forEach((task) => {
                 new Task(task.title, key, task.nonFormattedDueDate, task.priority, task.note, task.isDone);
@@ -302,7 +303,9 @@ if (TaskList.findByTitle('My List') === undefined) {
 
     new TaskList('Gym');
     new Task('Recovery Time', 'Gym', '2024-08-01', 'medium', 'Do a 10-minute foam rolling session to aid recovery.');
-    new Task('Strength Training', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises.');
+    new Task('Strength Training', 'Gym', '2024-08-01', 'high', 'Focus on upper body exercises.');
+    new Task('Take 30g of protein post-workout', 'Gym', '2024-08-01', 'low', 'Focus on upper body exercises.');
+    new Task('Check out more lower body workouts', 'Gym', '2024-08-01', 'medium', 'Focus on upper body exercises.');
 
     defaultList.setAsActive();
     requestUpdateTaskListInterface();
