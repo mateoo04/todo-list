@@ -1,94 +1,96 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Taskker</title>
-<script defer src="main.js"></script></head>
+  <script defer src="main.js"></script></head>
 
-<body>
+  <body>
     <div class="menu">
-        <h1>Taskker</h1>
-        <button class="all-tasks">All tasks</button>
-        <p class="your-lists">Your lists</p>
-        <ul class="lists-list"></ul>
+      <h1>Taskker</h1>
+      <button class="all-tasks">All tasks</button>
+      <p class="your-lists">Your lists</p>
+      <ul class="lists-list"></ul>
 
-        <button class="add-list-button"><span class="plus-sign">+ </span>New List</button>
+      <button class="add-list-button">
+        <span class="plus-sign">+ </span>New List
+      </button>
     </div>
     <main>
-        <h2 class="active-list-header"></h2>
-        <div class="task-list"></div>
-        <button class="add-task">+</button>
+      <h2 class="active-list-header"></h2>
+      <div class="task-list"></div>
+      <button class="add-task">+</button>
     </main>
 
     <dialog class="new-task-dialog">
-        <form action="" method="post">
-            <legend>New Task</legend>
-            <label for="list-select">List</label>
-            <select name="list" id="list-select"></select>
-            <label for="title-input">Title</label>
-            <input type="text" name="title" id="title-input" pattern=".{2,}">
-            <label for="due-date-input">Due Date</label>
-            <input type="date" name="due-date" id="due-date-input">
-            <label for="priority-input">Priority
-                <select name="priority" id="priority-input">
-                    <option value="none" selected>None</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </label>    
-            <label for="note">Note</label>
-            <textarea name="note" id="note-input" rows="4"></textarea>
-            <input type="submit" value="ADD">
-            <button type="button" class="close-dialog-button">CANCEL</button>
-        </form>
+      <form action="" method="post">
+        <legend>New Task</legend>
+        <label for="list-select">List</label>
+        <select name="list" id="list-select"></select>
+        <label for="title-input">Title</label>
+        <input type="text" name="title" id="title-input" pattern=".{2,}" />
+        <label for="due-date-input">Due Date</label>
+        <input type="date" name="due-date" id="due-date-input" />
+        <label for="priority-input"
+          >Priority
+          <select name="priority" id="priority-input">
+            <option value="none" selected>None</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </label>
+        <label for="note">Note</label>
+        <textarea name="note" id="note-input" rows="4"></textarea>
+        <input type="submit" value="ADD" />
+        <button type="button" class="close-dialog-button">CANCEL</button>
+      </form>
     </dialog>
 
     <dialog class="edit-task-dialog">
-        <form action="" method="post">
-            <legend>Edit Task</legend>
-            <label for="title-input">Title</label>
-            <input type="text" name="title" id="edit-title-input" pattern=".{2,}">
-            <label for="due-date-input">Due Date</label>
-            <input type="date" name="due-date" id="edit-due-date-input">
-            <label for="priority-input">Priority
-                <select name="priority" id="edit-priority-input">
-                    <option value="none" selected>None</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </label>
-            <label for="note">Note</label>
-            <textarea name="note" id="edit-note-input" rows="4"></textarea>
-            <input type="submit" value="SAVE CHANGES" class="submit-task-button">
-            <button type="button" class="close-edit-dialog-button">CANCEL</button>
-        </form>
+      <form action="" method="post">
+        <legend>Edit Task</legend>
+        <label for="title-input">Title</label>
+        <input type="text" name="title" id="edit-title-input" pattern=".{2,}" />
+        <label for="due-date-input">Due Date</label>
+        <input type="date" name="due-date" id="edit-due-date-input" />
+        <label for="priority-input"
+          >Priority
+          <select name="priority" id="edit-priority-input">
+            <option value="none" selected>None</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </label>
+        <label for="note">Note</label>
+        <textarea name="note" id="edit-note-input" rows="4"></textarea>
+        <input type="submit" value="SAVE CHANGES" class="submit-task-button" />
+        <button type="button" class="close-edit-dialog-button">CANCEL</button>
+      </form>
     </dialog>
 
     <dialog class="new-list-dialog">
-        <form action="" method="post">
-            <legend>New List</legend>
-            <label for="list-title">List Title</label>
-            <input type="text" name="list-title" id="list-title" pattern=".{2,}">
-            <input type="submit" name="submit" id="submit" value="CREATE LIST">
-            <button type="button" class="close-dialog-button">CLOSE</button>
-        </form>
+      <form action="" method="post">
+        <legend>New List</legend>
+        <label for="list-title">List Title</label>
+        <input type="text" name="list-title" id="list-title" pattern=".{2,}" />
+        <input type="submit" name="submit" id="submit" value="CREATE LIST" />
+        <button type="button" class="close-dialog-button">CLOSE</button>
+      </form>
     </dialog>
 
     <dialog class="confirm-deletion-dialog">
-        <p>Are you sure you want to delete this task?</p>
-        <button class="delete-task">DELETE TASK</button>
-        <button class="close-deletion-dialog-button">CANCEL</button>
+      <p>Are you sure you want to delete this task?</p>
+      <button class="delete-task">DELETE TASK</button>
+      <button class="close-deletion-dialog-button">CANCEL</button>
     </dialog>
 
     <dialog class="message-dialog">
-        <p></p>
+      <p></p>
 
-        <button type="button" class="close-dialog-button">CLOSE</button>
+      <button type="button" class="close-dialog-button">CLOSE</button>
     </dialog>
-</body>
-
+  </body>
 </html>
