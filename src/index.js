@@ -76,6 +76,8 @@ class TaskList {
         }
       }
     }
+
+    saveDataToLocalStorage(this);
   }
 
   addTask(task, isRetrieving = false) {
