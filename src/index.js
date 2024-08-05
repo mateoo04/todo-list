@@ -12,14 +12,14 @@ import {
 import PubSub from "pubsub-js";
 import { format, isToday, isTomorrow, isThisWeek } from "date-fns";
 
-const NEW_TASK = "new task created",
-  NEW_LIST = "new list created",
-  ACTIVE_LIST_CHANGE = "active list changed",
-  SHOW_ALL_TASKS = "show all tasks",
-  TASK_MODIFICATION = "task modified",
-  EDIT_TASK = "edit task button clicked",
-  DELETE_TASK = "delete task",
-  POPULATE_LIST_SELECT_REQUEST = "populate list select request";
+const NEW_TASK = "new task created";
+const NEW_LIST = "new list created";
+const ACTIVE_LIST_CHANGE = "active list changed";
+const SHOW_ALL_TASKS = "show all tasks";
+const TASK_MODIFICATION = "task modified";
+const EDIT_TASK = "edit task button clicked";
+const DELETE_TASK = "delete task";
+const POPULATE_LIST_SELECT_REQUEST = "populate list select request";
 
 class TaskList {
   tasks = new Map();
