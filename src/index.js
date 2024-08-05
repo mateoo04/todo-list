@@ -76,8 +76,6 @@ class TaskList {
         }
       }
     }
-
-    saveDataToLocalStorage(this);
   }
 
   addTask(task, isRetrieving = false) {
@@ -220,9 +218,12 @@ PubSub.subscribe(EDIT_TASK, (msg, selectedTask) => {
 });
 
 PubSub.subscribe(DELETE_TASK, (msg, id) => {
+  const list = TaskList.getListOfTaskByTaskId(id);
+
   TaskList.deleteTask(id);
 
   requestUpdateTaskListInterface();
+  saveDataToLocalStorage(list);
 });
 
 PubSub.subscribe(POPULATE_LIST_SELECT_REQUEST, () => {
